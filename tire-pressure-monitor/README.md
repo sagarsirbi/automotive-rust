@@ -1,4 +1,4 @@
-# 🦀 Rust Concurrency & Memory Safety Reference
+# Rust Concurrency & Memory Safety Reference
 
 This document explains the technical "Why" behind the Tire Pressure Monitor implementation.
 
