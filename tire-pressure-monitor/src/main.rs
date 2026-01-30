@@ -4,7 +4,7 @@ use std::time::Duration;
 
 struct tireData {
     sensor_id: String,
-    pressure:i32,
+    pressure:f32,
 }
 
 fn main() {
@@ -13,28 +13,32 @@ fn main() {
 
     let sensors = vec!["left-front", "right-front", "left-rear", "right-rear"];
 
-    // spawning a thread means creating a new thread for execution concurrent to the main code
+    let tx_clone = tx.clone();let tx_clone = tx.clone();
+    // spawning a thread means creating a new thread for execution concurrently to the main thread running the program
     thread::spawn(move || {
         let mut current_pressure = 31.5;
-        let tx = tx.clone()
 
         loop {
             current_pressure += 0.5;
 
-            for sensor in sensors {
-            let data = tireData {
-                sensor_id: sensor.to_String(),
-                pressure: current_pressure
-            };
+            for sensor in &sensors {
+                let data = tireData {
+                    sensor_id: sensor.to_string(),
+                    pressure: current_pressure
+                };
 
-            tx.send(data);
+                if tx_clone.send(data).is_err() {
+                    break;
+                }
 
-
-            }
-
-        
+                thread::sleep(Duration::from_secs(1));
+            }        
         }
-    })
+    });
 
-    tx.
+    drop(tx);
+
+    for received in rx {
+        println!("[Sensor ID: {}] Pressure: {} PSI", received.sensor_id, received.pressure);
+    };
 }
