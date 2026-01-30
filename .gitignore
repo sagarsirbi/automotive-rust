@@ -1,0 +1,9 @@
+// ignore qodo
+.qodo/
+
+// ignore all subfolder target 
+**/target/
+
+# Added by cargo
+
+/target
